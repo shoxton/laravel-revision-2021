@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
@@ -15,22 +16,32 @@ class ArticlesController extends Controller
 
     public function index()
     {
-        return view('articles.index', [
-            'articles' => Article::latest()->simplePaginate(2)
-        ]);
+
+        if(request('tag')) {
+            $articles = Tag::where('name', request('tag'))->firstOrFail()->articles()->simplePaginate(4);
+        } else {
+            $articles = Article::latest()->simplePaginate(4);
+        }
+
+        return view('articles.index', compact('articles'));
     }
 
     public function create()
     {
-        return view('articles.create');
+        $tags = Tag::all();
+        return view('articles.create', compact('tags'));
     }
 
-    public function store(Article $article)
+    public function store()
     {
+        $this->validateArticle();
+        $article = new Article(request(['title', 'excerpt', 'body']));
+        $article->user_id = 1;
+        $article->save();
 
-        Article::create($this->validateArticle());
+        $article->tags()->attach(request('tags'));
 
-        return redirect(route('articles.index'), $article);
+        return redirect(route('articles.index'));
     }
 
     public function edit(Article $article)
@@ -51,7 +62,8 @@ class ArticlesController extends Controller
         return request()->validate([
             'title' => 'required',
             'excerpt' => 'required',
-            'body' => 'required'
+            'body' => 'required',
+            'tags' => 'exists:tags,id'
         ]);
     }
 }

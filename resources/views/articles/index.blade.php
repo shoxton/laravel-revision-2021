@@ -2,7 +2,7 @@
 
 @section('content')
     <ul style="display: flex; width: 100%">
-        @foreach ($articles as $article)
+        @forelse ($articles as $article)
             <li style="margin-right: 16px;border: 1px solid rgba(255,255,255,.1);padding: 16px; display: flex; flex-direction: column; justify-content: space-between">
                 <h4 style="font-size: 20px;color: rgba(255,255,255,.7)">
                     <a style="color: #fff" href="{{ $article->path() }}">{{ $article->title }}</a>
@@ -10,7 +10,9 @@
                 <p style="font-size: 16px;color:rgba(255,255,255,.3)">{{ $article->excerpt }}</p>
                 <time style="font-size: 12px">{{ $article->created_at }}</time>
             </li>
-        @endforeach
+        @empty
+            <p>No relevant posts yet.</p>
+        @endforelse
     </ul>
     <div style="color: #fff!important; font-size: 14px">
         {{ $articles->links() }}

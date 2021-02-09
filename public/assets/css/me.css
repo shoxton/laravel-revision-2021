@@ -86,6 +86,7 @@ body.page-template-page-fullsingle-me {
   padding: 10vh 10vw;
   overflow: hidden;
   position: absolute;
+  inset: 0;
   z-index: 1000; }
   @media (max-width: 500px) {
     .fs-me {

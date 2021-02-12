@@ -1,27 +1,42 @@
 @extends('layout')
 @section('content')
-<div class="bio">
+<div class="d-flex flex-column"  style="overflow-y: auto">
     <h1>Be in touch</h1>
-    <form action="">
-        <fieldset>
+    @if (session('message'))
+        <div class="text-success">
+            <span>{{ session('message') }}</span>
+        </div>
+    @endif
+    <form action="/contact" method="POST" >
+        @csrf
+        <fieldset class="form-group">
             <label for="name">
                 Name:
             </label>
-            <input type="text" id="name">
+            <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror">
+            @error('name')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </fieldset>
         <fieldset>
             <label for="email">
                 Email:
             </label>
-            <input type="text" id="email">
+            <input type="text" id="email" name="email" class="form-control @error('email') is-invalid @enderror">
+            @error('email')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </fieldset>
         <fieldset>
             <label for="message">
                 Message:
             </label>
-            <textarea name="" id="message" cols="30" rows="10"></textarea>
+            <textarea name="message" id="message" class="form-control @error('message') is-invalid @enderror"></textarea>
+            @error('message')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </fieldset>
-        <button>Submit</button>
+        <button class="btn btn-lg btn-primary">Submit</button>
     </form>
 
 </div>
